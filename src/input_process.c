@@ -7,4 +7,5 @@ char**	get_command(char *str)
 	splited_command = ft_split(str, ' ');
 	if (!splited_command)
 		return (NULL);
+	return (splited_command);
 }

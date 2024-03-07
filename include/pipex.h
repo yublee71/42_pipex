@@ -14,5 +14,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include "libft.h"
+# define BUFFERSIZE 50
 
 char**	get_command(char *str);

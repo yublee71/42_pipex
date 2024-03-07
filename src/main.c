@@ -12,41 +12,27 @@
 
 #include "pipex.h"
 
-int	main(int argc, char* argv[])
+int	main(int argc, char* argv[], char* envp[])
 {
-	int		fd1;
-	int		fd2;
-	char	c[10];
-    pid_t pid;
+	int		fd_file1;
+	int		fd_file2;
+	char	**cmd1;
+	char	**cmd2;
+	char	buffer[BUFFERSIZE];
 
 	if (argc != 5)
 		return (1);
-
-	get_command(argv[2]);
-	get_command(argv[3]);
-	fd1 = open(argv[1], O_RDONLY);
-	read(fd1, c, 10);
-	ft_printf("%s\n",c);
-    pid = fork(); // Create a new process
-    if (pid == 0)
-	{
-        char *args[] = {"/bin/ls", "-l", NULL}; // Example arguments for the "ls" command
-        char *env[] = {NULL}; // No additional environment variables
-        execve(args[0], args, env); // Replace the child process with "ls"
-        // If execve returns, it means there was an error
-        perror("execve");
-    }
-	else if (pid > 0)
-	{
-        // Wait for the child process to finish
-        wait(NULL);
-        printf("Child process completed.\n");
-    }
-	else
-	{
-        perror("fork");
-        return 1;
-    }
-	close(fd1);
-    return 0;
+	fd_file1 = open(argv[1], O_RDONLY);
+	while (read(fd_file1, buffer, BUFFERSIZE) > 0)
+		;
+	close(fd_file1);
+	fd_file2 = open(argv[3], O_WRONLY);
+	//how to pass buffer as input?
+	cmd1 = get_command(argv[2]);
+	ft_fork(cmd1[0], cmd1[1], cmd1[2]);
+	//how to write output to file2?
+	cmd2 = get_command(argv[3]);
+	ft_fork(cmd2[0], cmd2[1], cmd2[2]);
+	write(buffer, fd_file2, BUFFERSIZE);
+	return (0);
 }
