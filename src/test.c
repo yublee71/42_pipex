@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <io.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
@@ -19,7 +18,7 @@ int main() {
     }
     else if(pid == 0){  // 자식 코드
         x = 2;
-        printf("자식 PID : %d,  x : %d\n, return : %d\n",(int)getpid(), x, (int)pid);
+        printf("자식 PID : %d,  x : %d, return : %d\n",(int)getpid(), x, (int)pid);
     }
     else {  // fork 실패
         printf("fork Fail! \n");
