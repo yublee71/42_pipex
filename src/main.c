@@ -49,6 +49,7 @@ int	main(int argc, char *argv[])
 		close(fd[1]);
 		read(fd[0], buf, BUFFERSIZE);
 		printf("yo%s\n", buf);
+		printf("yo%s\n", buf);
 	}
 
 	return 0;
