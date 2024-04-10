@@ -3,10 +3,11 @@
 int	main(int argc, char *argv[])
 {
 	int		fd[2];
-	// int		i;
-	// char	*args[argc];
+	// int		fd_file;
+	int		i;
+	char	*args[argc];
 	pid_t	pid;
-	char	buf[BUFFERSIZE];
+	char	buf[BUFFERSIZE] = {0};
 	
 	if (argc < 2 && argv)
 		return 1;
@@ -28,28 +29,26 @@ int	main(int argc, char *argv[])
 	else if (pid == 0)
 	{
 		close(fd[0]);
-		fd[1] = open("./output.txt", O_RDWR);
-		// fd[1] = open("./output.txt", O_RDWR | O_TRUNC);
-		// dup2(fd[1], 1);
+		// fd_file = open("./output.txt", O_RDWR | O_TRUNC);
+		dup2(fd[1], 1);
 
-		// i = -1;
-		// while (++i < argc - 1)
-		// 	args[i] = argv[i + 1];
-		// args[i] = NULL;
+		i = -1;
+		while (++i < argc - 1)
+			args[i] = argv[i + 1];
+		args[i] = NULL;
 
-		// if (execve(args[0], args, NULL) == -1)
-		// {
-		// 	perror("execve");
-		// 	return 1;
-		// }
+		if (execve(args[0], args, NULL) == -1)
+		{
+			perror("execve");
+			return 1;
+		}
 	}
 
 	else
 	{
 		close(fd[1]);
 		read(fd[0], buf, BUFFERSIZE);
-		printf("yo%s\n", buf);
-		printf("yo%s\n", buf);
+		printf("%s\n", buf);
 	}
 
 	return 0;
