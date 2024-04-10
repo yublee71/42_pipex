@@ -1,9 +1,0 @@
-eh?
-total 32
-drwxr-xr-x 3 yublee 2023_london    79 Apr 10 15:36 .
-drwxr-xr-x 6 yublee 2023_london    73 Apr  9 14:45 ..
--rwxr-xr-x 1 yublee 2023_london 16472 Apr 10 15:36 a.out
--rw-r--r-- 1 yublee 2023_london    35 Apr 10 12:02 input.txt
--rw-r--r-- 1 yublee 2023_london   845 Apr 10 15:36 main.c
-drwxr-xr-x 2 yublee 2023_london    71 Apr 10 10:30 old
--rw-r--r-- 1 yublee 2023_london     4 Apr 10 15:36 output.txt
