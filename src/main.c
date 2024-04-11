@@ -1,20 +1,25 @@
 #include "pipex.h"
 
+extern char **environ;
+
+char **get_args(char *argv);
+
 int	main(int argc, char *argv[])
 {
 	int		fd[2];
+	int		fd_input;
 	int		fd_output;
-	char	*args[4];
+	char	**args;
 	pid_t	pid;
 	// char	buf[BUFFERSIZE] = {0};
 	
-	if (argc < 2)
-		exit (1);
+	if (argc < 5)
+		exit (EXIT_FAILURE);
 
 	if (pipe(fd) < 0)
 	{
 		perror("pipe error");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	pid = fork();
@@ -22,23 +27,22 @@ int	main(int argc, char *argv[])
 	if (pid < 0)
 	{
 		perror("fork error");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	else if (pid == 0)
 	{
 		close(fd[0]);
 		dup2(fd[1], 1);
+		fd_input = open(argv[1], O_RDONLY);
+		dup2(fd_input, 0);
 
-		args[0] = argv[2];
-		args[1] = argv[3];
-		args[2] = argv[1];
-		args[3] = NULL;
+		args = get_args(argv[2]);
 
-		if (execve(args[0], args, NULL) == -1)
+		if (execve(args[0], args, environ) == -1)
 		{
 			perror("execve");
-			exit (1);
+			exit (EXIT_FAILURE);
 		}
 	}
 
@@ -46,20 +50,16 @@ int	main(int argc, char *argv[])
 	{
 		close(fd[1]);
 		dup2(fd[0], 0);
-		fd_output = open(argv[6], O_WRONLY | O_TRUNC);
+		fd_output = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0666);
 		dup2(fd_output, 1);
 
-		args[0] = argv[4];
-		args[1] = argv[5];
-		args[2] = NULL;
-		args[3] = NULL;
+		args = get_args(argv[3]);
 
-		if (execve(args[0], args, NULL) == -1)
+		if (execve(args[0], args, environ) == -1)
 		{
 			perror("execve");
-			exit (1);
+			exit (EXIT_FAILURE);
 		}
-		// read(0, buf, BUFFERSIZE);
-		// printf("%s\n", buf);
 	}
+	exit (0);
 }
