@@ -2,14 +2,17 @@
 
 //./pipex infile "ls -l" "wc -l" outfile
 
-void	free_str_array(char* str_array[])
+void	free_str_array(char** array)
 {
 	int	i;
 
 	i = 0;
-	while (str_array[i])
-		free(str_array[i++]);
-	free(str_array);
+	if (array)
+	{
+		while (array[i])
+			free(array[i++]);
+		free(array);
+	}
 }
 
 char **get_args(char *argv)
@@ -37,17 +40,31 @@ char **get_args(char *argv)
 		temp = paths[i];
 		paths[i] = ft_strjoin(paths[i], args[0]);
 		free(temp);
-		if (!access(paths[i], X_OK))
-		{
-			temp = args[0];
-			args[0] = paths[i];
-			free(temp);
-			flag = 1;
-			break;
-		}
 		i++;
 	}
-	if (!flag)
-		args[0] = NULL;
+	// i = 0;
+	// while (paths[i])
+	// {
+	// 	if (!access(paths[i], X_OK))
+	// 	{
+	// 		temp = args[0];
+	// 		args[0] = paths[i];
+	// 		free(temp);
+	// 		flag = 1;
+	// 		break;
+	// 	}
+	// }
+	// if (!flag)
+	// 	args[0] = NULL;
+	free_str_array(paths);
 	return (args);
+}
+
+int main()
+{
+	char *argv = "grep a";
+	char **args = get_args(argv);
+	// for(int i = 0; args[i]; i++)
+	// 	printf("%s\n", args[i]);
+	free_str_array(args);
 }
