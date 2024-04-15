@@ -6,7 +6,7 @@
 #    By: yublee <yublee@student.42london.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/19 14:55:22 by yublee            #+#    #+#              #
-#    Updated: 2024/04/15 21:31:07 by yublee           ###   ########.fr        #
+#    Updated: 2024/04/16 00:31:16 by yublee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,9 +30,10 @@ INCLUDE = -I include/
 NAME = pipex
 
 #needs editing later
-SRC = ./src/main.c \
-	./src/process_args.c \
-	./src/utils.c \
+SRC = src/main.c \
+	src/process_args.c \
+	src/processes.c \
+	src/utils.c \
 
 OBJ = $(SRC:%.c=$(BUILD_DIR)/%.o)
 

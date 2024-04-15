@@ -1,23 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   process_args.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/16 00:34:39 by yublee            #+#    #+#             */
+/*   Updated: 2024/04/16 00:37:47 by yublee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
-//./pipex infile "ls -l" "wc -l" outfile
-
-char **get_args(char *argv)
+void	join_path(char **paths, char **args)
 {
-	char	**args;
 	int		i;
-	int		flag;
-	char	*path;
-	char	**paths;
 	char	*temp;
 
-	flag = 0;
-	i = 0;
-	args = ft_split(argv, ' '); //needs free
-	while (!ft_strnstr(environ[i], "PATH", 4))
-		i++;
-	path = ft_strnstr(environ[i], "PATH", 4) + 5;
-	paths = ft_split(path, ':'); //needs free
 	i = 0;
 	while (paths[i])
 	{
@@ -25,39 +24,56 @@ char **get_args(char *argv)
 		paths[i] = ft_strjoin(paths[i], "/");
 		free(temp);
 		temp = paths[i];
-		paths[i] = ft_strjoin(paths[i], args[0]);
+		paths[i] = ft_strjoin(paths[i], *args);
 		free(temp);
 		i++;
 	}
+}
+
+void	check_path(char **paths, char **args)
+{
+	int		i;
+	int		flag;
+	char	*temp;
 
 	i = 0;
+	flag = 0;
 	while (paths[i])
 	{
 		if (!access(paths[i], X_OK))
 		{
-			temp = args[0];
-			args[0] = ft_strdup(paths[i]);
+			temp = *args;
+			*args = ft_strdup(paths[i]);
 			free(temp);
 			flag = 1;
-			break;
+			break ;
 		}
 		i++;
 	}
 	if (!flag)
 	{
-		free(args[0]);
-		args[0] = NULL;
+		free(*args);
+		*args = NULL;
 	}
+}
 
+char	**get_args(char *argv)
+{
+	char	**args;
+	int		i;
+	char	*path;
+	char	**paths;
+
+	i = 0;
+	args = ft_split(argv, ' ');
+	if (!access(args[0], X_OK))
+		return (args);
+	while (!ft_strnstr(environ[i], "PATH", 4))
+		i++;
+	path = ft_strnstr(environ[i], "PATH", 4) + 5;
+	paths = ft_split(path, ':');
+	join_path(paths, &args[0]);
+	check_path(paths, &args[0]);
 	free_str_array(paths);
 	return (args);
 }
-
-// int main()
-// {
-// 	char *argv = "grep a";
-// 	char **args = get_args(argv);
-// 	// for(int i = 0; args[i]; i++)
-// 	// 	printf("%s\n", args[i]);
-// 	free_str_array(args);
-// }

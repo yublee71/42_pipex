@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
+/*   Updated: 2024/04/16 00:38:22 by yublee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
 int	main(int argc, char *argv[])
 {
 	int		fd[2];
 	pid_t	pid;
-	
+
 	if (argc < 5)
 		exit_with_error("bad arguments", EXIT_FAILURE);
 	if (pipe(fd) < 0)
