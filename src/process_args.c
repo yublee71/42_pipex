@@ -1,7 +1,5 @@
 #include "pipex.h"
 
-extern char **environ;
-
 char **get_args(char *argv)
 {
 	char	**args;
