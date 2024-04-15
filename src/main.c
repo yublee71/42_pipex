@@ -2,7 +2,6 @@
 
 extern char **environ;
 
-char **get_args(char *argv);
 
 int	main(int argc, char *argv[])
 {
@@ -11,25 +10,14 @@ int	main(int argc, char *argv[])
 	int		fd_output;
 	char	**args;
 	pid_t	pid;
-	// char	buf[BUFFERSIZE] = {0};
 	
 	if (argc < 5)
-		exit (EXIT_FAILURE);
-
+		exit_with_error("bad arguments", EXIT_FAILURE);
 	if (pipe(fd) < 0)
-	{
-		perror("pipe error");
-		exit(EXIT_FAILURE);
-	}
-
+		exit_with_error("pipe error", EXIT_FAILURE);
 	pid = fork();
-
 	if (pid < 0)
-	{
-		perror("fork error");
-		exit(EXIT_FAILURE);
-	}
-
+		exit_with_error("fork error", EXIT_FAILURE);
 	else if (pid == 0)
 	{
 		close(fd[0]);
@@ -45,7 +33,6 @@ int	main(int argc, char *argv[])
 			exit (EXIT_FAILURE);
 		}
 	}
-
 	else
 	{
 		close(fd[1]);
