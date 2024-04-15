@@ -6,6 +6,16 @@ void	exit_with_error(const char *str, int errno)
 	exit(errno);
 }
 
+void	free_str_array(char** array)
+{
+	int	i;
+
+	i = 0;
+	while (array[i])
+		free(array[i++]);
+	free(array);
+}
+
 void	child_process(int fd[2], char *argv[])
 {
 	int		fd_input;
@@ -19,9 +29,16 @@ void	child_process(int fd[2], char *argv[])
 	dup2(fd_input, 0);
 	args = get_args(argv[2]);
 	if (!args[0])
+	{
+		free_str_array(args);
 		exit_with_error("command not found", 127);
+	}
 	if (execve(args[0], args, environ) == -1)
+	{
+		free_str_array(args);
 		exit_with_error("execve", EXIT_FAILURE);
+	}
+	free_str_array(args);
 }
 
 void	parent_process(int	fd[2], char *argv[])
@@ -37,7 +54,14 @@ void	parent_process(int	fd[2], char *argv[])
 	dup2(fd_output, 1);
 	args = get_args(argv[3]);
 	if (!args[0])
+	{
+		free_str_array(args);
 		exit_with_error("command not found", 127);
+	}
 	if (execve(args[0], args, environ) == -1)
+	{
+		free_str_array(args);
 		exit_with_error("execve", EXIT_FAILURE);
+	}
+	free_str_array(args);
 }

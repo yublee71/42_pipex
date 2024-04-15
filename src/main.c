@@ -3,9 +3,6 @@
 int	main(int argc, char *argv[])
 {
 	int		fd[2];
-	// int		fd_input;
-	// int		fd_output;
-	// char	**args;
 	pid_t	pid;
 	
 	if (argc < 5)
