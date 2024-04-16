@@ -6,12 +6,11 @@
 #    By: yublee <yublee@student.42london.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/19 14:55:22 by yublee            #+#    #+#              #
-#    Updated: 2024/04/16 00:31:16 by yublee           ###   ########.fr        #
+#    Updated: 2024/04/16 13:55:57 by yublee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#needs editing later
-DIRS := src/action
+DIRS = src
 
 CC = cc
 
