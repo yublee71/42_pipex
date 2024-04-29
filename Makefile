@@ -6,7 +6,7 @@
 #    By: yublee <yublee@student.42london.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/19 14:55:22 by yublee            #+#    #+#              #
-#    Updated: 2024/04/18 18:06:52 by yublee           ###   ########.fr        #
+#    Updated: 2024/04/29 11:40:28 by yublee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,22 +28,12 @@ INCLUDE = -I include/
 
 NAME = pipex
 
-BONUS_NAME = pipex
-
-#needs editing later
 SRC = src/main.c \
 	src/process_args.c \
 	src/processes.c \
 	src/utils.c \
 
-BONUS_SRC = src/main_bonus.c \
-	src/process_args.c \
-	src/processes.c \
-	src/utils.c \
-
 OBJ = $(SRC:%.c=$(BUILD_DIR)/%.o)
-
-BONUS_OBJ = $(BONUS_SRC:%.c=$(BUILD_DIR)/%.o)
 
 LIBFT_DIR = ./libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
@@ -73,8 +63,5 @@ fclean: clean
 	$(RM) $(RMFLAGS) $(LIBFT_LIB)
 
 re: fclean all
-
-bonus: $(LIBFT_LIB) $(BUILD_DIR) $(BONUS_OBJ)
-	$()
 
 .PHONY: all clean fclean re
