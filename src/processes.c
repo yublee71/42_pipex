@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:34:30 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/01 21:12:18 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/01 23:18:41 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,12 @@ void	child_process(int fd[2], char *argv[])
 
 	close(fd[0]);
 	dup2(fd[1], 1);
+	close(fd[1]);
 	fd_input = open(argv[1], O_RDONLY);
 	if (fd_input == -1)
 		exit_with_error("open input", EXIT_FAILURE);
 	dup2(fd_input, 0);
+	close(fd_input);
 	args = get_args(argv[2]);
 	if (!args[0])
 	{
@@ -34,7 +36,7 @@ void	child_process(int fd[2], char *argv[])
 		free_str_array(args);
 		exit_with_error("execve", EXIT_FAILURE);
 	}
-	free_str_array(args);
+	exit(0);
 }
 
 void	parent_process(int fd[2], char *argv[])
@@ -44,10 +46,12 @@ void	parent_process(int fd[2], char *argv[])
 
 	close(fd[1]);
 	dup2(fd[0], 0);
+	close(fd[0]);
 	fd_output = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0666);
 	if (fd_output == -1)
-		exit_with_error("open output", EXIT_FAILURE);
+		exit(0);
 	dup2(fd_output, 1);
+	close(fd_output);
 	args = get_args(argv[3]);
 	if (!args[0])
 	{
@@ -59,5 +63,5 @@ void	parent_process(int fd[2], char *argv[])
 		free_str_array(args);
 		exit_with_error("execve", EXIT_FAILURE);
 	}
-	free_str_array(args);
+	exit(0);
 }
