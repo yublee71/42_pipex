@@ -6,7 +6,7 @@
 #    By: yublee <yublee@student.42london.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/19 14:55:22 by yublee            #+#    #+#              #
-#    Updated: 2024/04/29 11:40:28 by yublee           ###   ########.fr        #
+#    Updated: 2024/05/02 18:42:57 by yublee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,6 @@ NAME = pipex
 
 SRC = src/main.c \
 	src/process_args.c \
-	src/processes.c \
 	src/utils.c \
 
 OBJ = $(SRC:%.c=$(BUILD_DIR)/%.o)
