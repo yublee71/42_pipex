@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/02 17:07:08 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/02 17:24:26 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,11 @@ int	main(int argc, char *argv[], char **env)
 		if (i != 0)
 		{
 			fd_output = open(argv[argc - 1], O_RDONLY);
-			// dup2(fd_output, pipe_to_child[WRITE_END]);
 			while (read(fd_output, buf1, 1) > 0)
 				write(pipe_to_child[WRITE_END], buf1, 1);
 		}
 		else
 		{
-			// dup2(fd_input, pipe_to_child[WRITE_END]);
 			while (read(fd_input, buf1, 1) > 0)
 				write(pipe_to_child[WRITE_END], buf1, 1);
 		}
@@ -90,13 +88,5 @@ int	main(int argc, char *argv[], char **env)
 		close(pipe_from_child[READ_END]);
 		i++;
 	}
-	// close(pipe_from_child[READ_END]);
-	// close(pipe_from_child[WRITE_END]);
-	// close(pipe_to_child[READ_END]);
-	// close(pipe_to_child[WRITE_END]);
-	// close(fd_input);
-	// close(fd_output);
-	// while (wait(NULL) != -1)
-	// 	;
 	exit (EXIT_SUCCESS);
 }
