@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/02 23:14:32 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/02 23:19:09 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,13 @@
 
 typedef struct s_pipe
 {
-	// int		**fds;
 	pid_t	*pids;
 }	t_pipe;
 
 static t_pipe pipe_initialize(int cmd_cnt)
 {
 	t_pipe	pipes;
-	// int		i;
 
-	// pipes.fds = (int **)malloc((cmd_cnt - 1) * sizeof(int *));
-	// if (!pipes.fds)
-	// 	exit_with_error("malloc", EXIT_FAILURE);
-	// i = 0;
-	// while (i < cmd_cnt - 1)
-	// {
-	// 	pipes.fds[i] = (int *)malloc(2 * sizeof(int));
-	// 	if (pipe(pipes.fds[i]) < 0)
-	// 		exit_with_error("pipe", EXIT_FAILURE);
-	// 	i++;
-	// }
 	pipes.pids = (pid_t *)malloc(cmd_cnt * sizeof(pid_t));
 	if (!pipes.pids)
 	{
@@ -58,17 +45,11 @@ int main(int argc, char *argv[], char **env)
 	if (cmd_cnt < 2)
 		exit_with_error("bad arguments", EXIT_FAILURE);
 	pipes = pipe_initialize(cmd_cnt);
-	// int		fds[cmd_cnt - 1][2];
-	// for (int i = 0; i < cmd_cnt - 1; i++)
-	// 	pipe(fds[i]);
 	int	fds[2][2];
 	for (int i = 0; i < cmd_cnt; i++)
 	{
 		if (i == 0)
-		{
-			// pipe(fds[0]);
 			pipe(fds[1]);
-		}
 		else
 		{
 			fds[0][0] = fds[1][0];
