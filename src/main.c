@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/02 23:07:34 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/02 23:14:32 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,23 @@ int main(int argc, char *argv[], char **env)
 	if (cmd_cnt < 2)
 		exit_with_error("bad arguments", EXIT_FAILURE);
 	pipes = pipe_initialize(cmd_cnt);
-	int		fds[cmd_cnt - 1][2];
-	for (int i = 0; i < cmd_cnt - 1; i++)
-		pipe(fds[i]);
+	// int		fds[cmd_cnt - 1][2];
+	// for (int i = 0; i < cmd_cnt - 1; i++)
+	// 	pipe(fds[i]);
+	int	fds[2][2];
 	for (int i = 0; i < cmd_cnt; i++)
 	{
+		if (i == 0)
+		{
+			// pipe(fds[0]);
+			pipe(fds[1]);
+		}
+		else
+		{
+			fds[0][0] = fds[1][0];
+			fds[0][1] = fds[1][1];
+			pipe(fds[1]);
+		}
 		pipes.pids[i] = fork();
 		if (pipes.pids[i] < 0)
 		{
@@ -73,9 +85,9 @@ int main(int argc, char *argv[], char **env)
 		{
 			if (i != 0)
 			{
-				close(fds[i - 1][1]);
-				dup2(fds[i - 1][0], STDIN_FILENO);
-				close(fds[i - 1][0]);
+				close(fds[0][1]);
+				dup2(fds[0][0], STDIN_FILENO);
+				close(fds[0][0]);
 			}
 			else
 			{
@@ -88,9 +100,9 @@ int main(int argc, char *argv[], char **env)
 			}
 			if (i != cmd_cnt - 1)
 			{
-				close(fds[i][0]);
-				dup2(fds[i][1], STDOUT_FILENO);
-				close(fds[i][1]);
+				close(fds[1][0]);
+				dup2(fds[1][1], STDOUT_FILENO);
+				close(fds[1][1]);
 			}
 			else
 			{
@@ -117,9 +129,9 @@ int main(int argc, char *argv[], char **env)
 		else
 		{
 			if (i != 0)
-				close(fds[i - 1][0]);
+				close(fds[0][0]);
 			if (i != cmd_cnt - 1)
-				close(fds[i][1]);
+				close(fds[1][1]);
 		}
 	}
 	exit_status = 0;
