@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:34:39 by yublee            #+#    #+#             */
-/*   Updated: 2024/04/16 02:00:32 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/02 19:34:46 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,9 @@ void	join_path(char **paths, char **args)
 void	check_path(char **paths, char **args)
 {
 	int		i;
-	int		flag;
 	char	*temp;
 
 	i = 0;
-	flag = 0;
 	while (paths[i])
 	{
 		if (!access(paths[i], X_OK))
@@ -45,19 +43,13 @@ void	check_path(char **paths, char **args)
 			temp = *args;
 			*args = ft_strdup(paths[i]);
 			free(temp);
-			flag = 1;
 			break ;
 		}
 		i++;
 	}
-	if (!flag)
-	{
-		free(*args);
-		*args = NULL;
-	}
 }
 
-char	**get_args(char *argv)
+char	**get_args(char *argv, char **env)
 {
 	char	**args;
 	int		i;
@@ -68,9 +60,9 @@ char	**get_args(char *argv)
 	args = ft_split(argv, ' ');
 	if (!access(args[0], X_OK))
 		return (args);
-	while (!ft_strnstr(environ[i], "PATH", 4))
+	while (!ft_strnstr(env[i], "PATH", 4))
 		i++;
-	path = ft_strnstr(environ[i], "PATH", 4) + 5;
+	path = ft_strnstr(env[i], "PATH", 4) + 5;
 	paths = ft_split(path, ':');
 	join_path(paths, &args[0]);
 	check_path(paths, &args[0]);

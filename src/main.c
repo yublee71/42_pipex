@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/02 18:44:17 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/02 19:34:22 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int main(int argc, char *argv[], char **env)
 {
 	int		cmd_cnt;
 	cmd_cnt = argc - 3;
-
 	if (cmd_cnt < 2)
 		exit_with_error("bad arguments", EXIT_FAILURE);
 
@@ -30,6 +29,9 @@ int main(int argc, char *argv[], char **env)
 	pid_t	pids[cmd_cnt];
 	int		fd_input;
 	int		fd_output;
+	int		status;
+	int		exit_status;
+	char	*tmp;
 
 	for (int i = 0; i < cmd_cnt - 1; i++)
 	{
@@ -57,7 +59,7 @@ int main(int argc, char *argv[], char **env)
 			{
 				fd_input = open(argv[1], O_RDONLY);
 				if (fd_input < 0)
-					exit_with_error("input open", EXIT_FAILURE);
+					exit_with_error("input", EXIT_FAILURE);
 				if (dup2(fd_input, STDIN_FILENO) < 0)
 					exit_with_error("dup2", EXIT_FAILURE);
 				close(fd_input);
@@ -72,16 +74,17 @@ int main(int argc, char *argv[], char **env)
 			{
 				fd_output = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0666);
 				if (fd_output < 0)
-					exit_with_error("output open", EXIT_FAILURE);
+					exit_with_error("output", EXIT_FAILURE);
 				if (dup2(fd_output, STDOUT_FILENO) < 0)
 					exit_with_error("dup2", EXIT_FAILURE);
 				close(fd_output);
 			}
-			args = get_args(argv[i + 2]);
-			if (!args[0])
+			args = get_args(argv[i + 2], env);
+			if (access(args[0], X_OK))
 			{
+				tmp = ft_strdup(args[0]);
 				free_str_array(args);
-				exit_with_error("command not found", 127);
+				exit_with_error(tmp, 127);
 			}
 			if (execve(args[0], args, env) == -1)
 			{
@@ -97,7 +100,12 @@ int main(int argc, char *argv[], char **env)
 				close(pipe_fd[i][1]);
 		}
 	}
-	while (wait(NULL) != -1)
-		;
-	exit(EXIT_SUCCESS);
+	exit_status = 0;
+	for (int i = 0; i < cmd_cnt; i++)
+	{
+		waitpid(pids[i], &status, 0);
+		if (WIFEXITED(status))
+			exit_status = WEXITSTATUS(status);
+	}
+	exit(exit_status);
 }
