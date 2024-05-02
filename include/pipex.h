@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:55:33 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/02 19:34:54 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/03 00:14:25 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,16 @@
 # define READ_END 0
 # define WRITE_END 1
 
+typedef struct s_info
+{
+	char	*input;
+	char	*output;
+	int		cmd_cnt;
+	char	**env;
+}	t_info;
+
+void	pipex(t_info info, int fds[2][2], char **argv);
 char	**get_args(char *argv, char **env);
-void	join_path(char **paths, char **args);
-void	check_path(char **paths, char **args);
 void	exit_with_error(char *str, int exit_no);
 void	free_str_array(char **array);
 
