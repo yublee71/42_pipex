@@ -6,54 +6,73 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/02 19:34:22 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/02 22:31:15 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
+typedef struct s_pipe
+{
+	int		**fds;
+	pid_t	*pids;
+}	t_pipe;
+
+static t_pipe pipe_initialize(int cmd_cnt)
+{
+	t_pipe	pipes;
+	int		i;
+
+	pipes.fds = (int **)malloc((cmd_cnt - 1) * sizeof(int *));
+	if (!pipes.fds)
+		exit_with_error("malloc", EXIT_FAILURE);
+	i = 0;
+	while (i < cmd_cnt - 1)
+	{
+		pipes.fds[i] = (int *)malloc(2 * sizeof(int));
+		if (pipe(pipes.fds[i]) < 0)
+			exit_with_error("pipe", EXIT_FAILURE);
+		i++;
+	}
+	pipes.pids = (pid_t *)malloc(cmd_cnt * sizeof(pid_t));
+	if (!pipes.pids)
+	{
+		exit_with_error("malloc", EXIT_FAILURE);
+		
+	}
+	return (pipes);
+}
 
 int main(int argc, char *argv[], char **env)
 {
 	int		cmd_cnt;
-	cmd_cnt = argc - 3;
-	if (cmd_cnt < 2)
-		exit_with_error("bad arguments", EXIT_FAILURE);
-
-	char	**args;
-	int		pipe_fd[cmd_cnt - 1][2];
-	pid_t	pids[cmd_cnt];
+	t_pipe	pipes;
 	int		fd_input;
 	int		fd_output;
 	int		status;
 	int		exit_status;
 	char	*tmp;
+	char	**args;
 
-	for (int i = 0; i < cmd_cnt - 1; i++)
-	{
-		if (pipe(pipe_fd[i]) < 0)
-			exit_with_error("pipe", EXIT_FAILURE);
-	}
-
+	cmd_cnt = argc - 3;
+	if (cmd_cnt < 2)
+		exit_with_error("bad arguments", EXIT_FAILURE);
+	pipes = pipe_initialize(cmd_cnt);
 	for (int i = 0; i < cmd_cnt; i++)
 	{
-		pids[i] = fork();
-		if (pids[i] < 0)
+		pipes.pids[i] = fork();
+		if (pipes.pids[i] < 0)
 		{
 			exit_with_error("fork", EXIT_FAILURE);
 			exit(EXIT_FAILURE);
 		}
-		if (pids[i] == 0)
+		if (pipes.pids[i] == 0)
 		{
 			if (i != 0)
 			{
-				close(pipe_fd[i - 1][1]);
-				dup2(pipe_fd[i - 1][0], STDIN_FILENO);
-				close(pipe_fd[i - 1][0]);
+				close(pipes.fds[i - 1][1]);
+				dup2(pipes.fds[i - 1][0], STDIN_FILENO);
+				close(pipes.fds[i - 1][0]);
 			}
 			else
 			{
@@ -66,9 +85,9 @@ int main(int argc, char *argv[], char **env)
 			}
 			if (i != cmd_cnt - 1)
 			{
-				close(pipe_fd[i][0]);
-				dup2(pipe_fd[i][1], STDOUT_FILENO);
-				close(pipe_fd[i][1]);
+				close(pipes.fds[i][0]);
+				dup2(pipes.fds[i][1], STDOUT_FILENO);
+				close(pipes.fds[i][1]);
 			}
 			else
 			{
@@ -95,15 +114,15 @@ int main(int argc, char *argv[], char **env)
 		else
 		{
 			if (i != 0)
-				close(pipe_fd[i - 1][0]);
+				close(pipes.fds[i - 1][0]);
 			if (i != cmd_cnt - 1)
-				close(pipe_fd[i][1]);
+				close(pipes.fds[i][1]);
 		}
 	}
 	exit_status = 0;
 	for (int i = 0; i < cmd_cnt; i++)
 	{
-		waitpid(pids[i], &status, 0);
+		waitpid(pipes.pids[i], &status, 0);
 		if (WIFEXITED(status))
 			exit_status = WEXITSTATUS(status);
 	}
