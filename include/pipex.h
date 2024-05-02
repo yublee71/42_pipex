@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:55:33 by yublee            #+#    #+#             */
-/*   Updated: 2024/04/23 16:39:07 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/02 19:34:54 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,13 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include "libft.h"
+# define READ_END 0
+# define WRITE_END 1
 
-extern char	**environ;
-
-void	child_process(int fd[2], char *argv[]);
-void	parent_process(int fd[2], char *argv[]);
-char	**get_args(char *argv);
+char	**get_args(char *argv, char **env);
 void	join_path(char **paths, char **args);
 void	check_path(char **paths, char **args);
-void	exit_with_error(const char *str, int exit_no);
+void	exit_with_error(char *str, int exit_no);
 void	free_str_array(char **array);
 
 #endif
