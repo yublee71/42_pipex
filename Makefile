@@ -6,11 +6,11 @@
 #    By: yublee <yublee@student.42london.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/19 14:55:22 by yublee            #+#    #+#              #
-#    Updated: 2024/05/03 01:20:47 by yublee           ###   ########.fr        #
+#    Updated: 2024/05/03 15:25:00 by yublee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-DIRS = src gnl src/bonus
+DIRS = src gnl
 
 CC = cc
 
@@ -31,6 +31,8 @@ NAME = pipex
 SRC = src/main.c \
 	src/pipex.c \
 	src/utils.c \
+	gnl/get_next_line.c \
+	gnl/get_next_line_utils.c \
 
 BONUS_SRC = src/main_bonus.c \
 	src/pipex_bonus.c \
@@ -46,10 +48,16 @@ LIBFT_LIB = $(LIBFT_DIR)/libft.a
 
 BUILD_DIR = build
 
+ifdef WITH_BONUS
+	OBJ_FILES = $(BONUS_OBJ)
+else
+	OBJ_FILES = $(OBJ)
+endif
+
 all: $(NAME)
 
-$(NAME): $(LIBFT_LIB) $(BUILD_DIR) $(OBJ)
-	$(CC) -L$(LIBFT_DIR) $(OBJ) -g -o $@ -lft
+$(NAME): $(LIBFT_LIB) $(BUILD_DIR) $(OBJ_FILES)
+	$(CC) -L$(LIBFT_DIR) $(OBJ_FILES) -g -o $@ -lft
 
 $(LIBFT_LIB):
 	make -C $(LIBFT_DIR)
@@ -60,8 +68,8 @@ $(BUILD_DIR):
 $(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c $^ -o $@
 
-bonus: $(LIBFT_LIB) $(BUILD_DIR) $(BONUS_OBJ)
-	$(CC) -L$(LIBFT_DIR) $(BONUS_OBJ) -g -o $(NAME) -lft
+bonus: 
+	make WITH_BONUS=1 all
 
 clean:
 	$(RM) -rf $(BUILD_DIR)

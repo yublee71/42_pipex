@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:55:33 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/03 00:14:25 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/03 15:09:42 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include "libft.h"
+# include "get_next_line.h"
 # define READ_END 0
 # define WRITE_END 1
 
@@ -28,9 +29,10 @@ typedef struct s_info
 	char	*output;
 	int		cmd_cnt;
 	char	**env;
+	int		here_doc;
 }	t_info;
 
-void	pipex(t_info info, int fds[2][2], char **argv);
+pid_t	pipex(t_info info, int fds[2][2], char **argv);
 char	**get_args(char *argv, char **env);
 void	exit_with_error(char *str, int exit_no);
 void	free_str_array(char **array);

@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:34:13 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/03 00:09:38 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/03 14:30:33 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 void	exit_with_error(char *str, int exit_no)
 {
@@ -77,6 +77,7 @@ char	**get_args(char *argv, char **env)
 	char	**args;
 	int		i;
 	char	*path;
+	char	*tmp;
 	char	**paths;
 
 	i = 0;
@@ -89,6 +90,13 @@ char	**get_args(char *argv, char **env)
 	paths = ft_split(path, ':');
 	join_path(paths, &args[0]);
 	check_path(paths, &args[0]);
+	if (access(args[0], X_OK))
+	{
+		tmp = ft_strdup(args[0]);
+		free_str_array(args);
+		free_str_array(paths);
+		exit_with_error(tmp, 127);
+	}
 	free_str_array(paths);
 	return (args);
 }
