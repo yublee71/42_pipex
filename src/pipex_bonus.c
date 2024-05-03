@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/03 14:32:38 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/03 16:02:43 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ static void	get_output(t_info info)
 	int	fd_output;
 
 	if (!info.here_doc)
-		fd_output = open(info.output, O_WRONLY | O_TRUNC | O_CREAT, 0777);
+		fd_output = open(info.output, O_WRONLY | O_TRUNC | O_CREAT, 0666);
 	else
-		fd_output = open(info.output, O_WRONLY | O_APPEND | O_CREAT, 0777);
+		fd_output = open(info.output, O_WRONLY | O_APPEND | O_CREAT, 0666);
 	if (fd_output < 0)
 		exit_with_error("output", EXIT_FAILURE);
 	if (dup2(fd_output, STDOUT_FILENO) < 0)
