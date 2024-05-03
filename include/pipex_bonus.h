@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:55:33 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/03 00:29:09 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/03 01:21:33 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include "libft.h"
+# include "get_next_line.h"
 # define READ_END 0
 # define WRITE_END 1
 
@@ -29,7 +30,7 @@ typedef struct s_info
 	int		cmd_cnt;
 	char	**env;
 	int		here_doc;
-	int		here_doc_end;
+	char	*here_doc_end;
 }	t_info;
 
 void	pipex(t_info info, int fds[2][2], char **argv);

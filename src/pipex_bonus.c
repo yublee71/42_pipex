@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/03 00:32:17 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/03 01:36:27 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,29 @@ static void	get_output(char *output)
 	close(fd_output);
 }
 
-static void	get_input(char *input)
+static void	get_input(t_info info)
 {
-	int	fd_input;
+	int		fd_input;
+	char	*buf;
 
-	fd_input = open(input, O_RDONLY);
-	if (fd_input < 0)
-		exit_with_error("input", EXIT_FAILURE);
-	if (dup2(fd_input, STDIN_FILENO) < 0)
-		exit_with_error("dup2", EXIT_FAILURE);
-	close(fd_input);
+	if (!info.here_doc)
+	{
+		fd_input = open(info.input, O_RDONLY);
+		if (fd_input < 0)
+			exit_with_error("input", EXIT_FAILURE);
+		if (dup2(fd_input, STDIN_FILENO) < 0)
+			exit_with_error("dup2", EXIT_FAILURE);
+		close(fd_input);
+	}
+	else
+	{
+		while (1)
+		{
+			buf = get_next_line(0);
+			if (!ft_strncmp(buf, info.here_doc_end, ft_strlen(info.here_doc_end) - 1))
+				break;
+		}
+	}
 }
 
 static void	child_process(int i, int fds[2][2], char *cmd, t_info info)
@@ -65,7 +78,7 @@ static void	child_process(int i, int fds[2][2], char *cmd, t_info info)
 		close(fds[0][READ_END]);
 	}
 	else
-		get_input(info.input);
+		get_input(info);
 	if (i != info.cmd_cnt - 1)
 	{
 		close(fds[1][READ_END]);
@@ -99,7 +112,7 @@ void	pipex(t_info info, int fds[2][2], char **argv)
 			exit(EXIT_FAILURE);
 		}
 		if (pid == 0)
-			child_process(i, fds, argv[i + 2], info);
+			child_process(i, fds, argv[i + 2 + info.here_doc], info);
 		if (i != 0)
 			close(fds[0][READ_END]);
 		if (i != info.cmd_cnt - 1)
