@@ -6,17 +6,29 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/03 01:36:27 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/03 02:50:55 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-static void	execute_cmd(char *cmd, t_info info)
+static void	execute_cmd(char *cmd, t_info info, int i)
 {
 	char	*tmp;
 	char	**args;
+	char	*buf;
 
+	if (info.here_doc && i == 0)
+	{
+		while (1)
+		{
+			buf = get_next_line(0);
+			if(!ft_strncmp(buf,info.here_doc_end, ft_strlen(info.here_doc_end) - 1))
+				break ;
+			write(1, buf, ft_strlen(buf));
+		}
+		return ;
+	}
 	args = get_args(cmd, info.env);
 	if (access(args[0], X_OK))
 	{
@@ -31,22 +43,25 @@ static void	execute_cmd(char *cmd, t_info info)
 	}
 }
 
-static void	get_output(char *output)
+static void	get_output(t_info info)
 {
 	int	fd_output;
-
-	fd_output = open(output, O_WRONLY | O_TRUNC | O_CREAT, 0666);
+	
+	if (!info.here_doc)
+		fd_output = open(info.output, O_WRONLY | O_TRUNC | O_CREAT, 0777);
+	else
+		fd_output = open(info.output, O_WRONLY | O_APPEND | O_CREAT, 0777);
 	if (fd_output < 0)
 		exit_with_error("output", EXIT_FAILURE);
 	if (dup2(fd_output, STDOUT_FILENO) < 0)
 		exit_with_error("dup2", EXIT_FAILURE);
 	close(fd_output);
+
 }
 
 static void	get_input(t_info info)
 {
 	int		fd_input;
-	char	*buf;
 
 	if (!info.here_doc)
 	{
@@ -56,15 +71,6 @@ static void	get_input(t_info info)
 		if (dup2(fd_input, STDIN_FILENO) < 0)
 			exit_with_error("dup2", EXIT_FAILURE);
 		close(fd_input);
-	}
-	else
-	{
-		while (1)
-		{
-			buf = get_next_line(0);
-			if (!ft_strncmp(buf, info.here_doc_end, ft_strlen(info.here_doc_end) - 1))
-				break;
-		}
 	}
 }
 
@@ -87,8 +93,8 @@ static void	child_process(int i, int fds[2][2], char *cmd, t_info info)
 		close(fds[1][WRITE_END]);
 	}
 	else
-		get_output(info.output);
-	execute_cmd(cmd, info);
+		get_output(info);
+	execute_cmd(cmd, info, i);
 }
 
 void	pipex(t_info info, int fds[2][2], char **argv)
@@ -107,12 +113,9 @@ void	pipex(t_info info, int fds[2][2], char **argv)
 		pipe(fds[1]);
 		pid = fork();
 		if (pid < 0)
-		{
 			exit_with_error("fork", EXIT_FAILURE);
-			exit(EXIT_FAILURE);
-		}
 		if (pid == 0)
-			child_process(i, fds, argv[i + 2 + info.here_doc], info);
+			child_process(i, fds, argv[i + 2], info);
 		if (i != 0)
 			close(fds[0][READ_END]);
 		if (i != info.cmd_cnt - 1)
