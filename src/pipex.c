@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/04 21:37:18 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/05 00:26:10 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,15 @@ static void	execute_cmd(char *cmd, t_info info, int i)
 		while (1)
 		{
 			buf = get_next_line(0);
-			if (!buf)
-				exit_with_error("malloc", EXIT_FAILURE, info);
+			// ft_printf("%s",buf);
 			if (!ft_strncmp(buf, cmd, ft_strlen(cmd) - 1))
 				break ;
 			write(1, buf, ft_strlen(buf));
 			free(buf);
 		}
+		free(buf);
+		buf = get_next_line(-1);
+		free_fds(info.fds, info.cmd_cnt - 1);
 		exit(EXIT_SUCCESS);
 	}
 	args = get_args(cmd, info.env, info);
@@ -91,16 +93,17 @@ static void	child_process(int i, int **fds, char *cmd, t_info info)
 	execute_cmd(cmd, info, i);
 }
 
-void	pipex(t_info info, char **argv)
+int	pipex(t_info info, char **argv)
 {
 	int		i;
 	pid_t	pid;
 	int		status;
-	// int		max_status;
+	int		max_status;
 
 	i = -1;
-	// max_status = 0;
-	while (++i < info.cmd_cnt)
+	status = 0;
+	max_status = 0;
+	while (info.cmd_cnt && ++i < info.cmd_cnt)
 	{
 		pid = fork();
 		if (pid < 0)
@@ -117,8 +120,8 @@ void	pipex(t_info info, char **argv)
 	while (wait(&status) != -1)
 	{
 		// printf("what : %d\n", WEXITSTATUS(status));
-		// if (max_status < WEXITSTATUS(status))
-		// 	max_status = WEXITSTATUS(status);
+		if (max_status < WEXITSTATUS(status))
+			max_status = WEXITSTATUS(status);
 		;
 	}
 	// printf("max : %d\n", max_status);
@@ -126,5 +129,5 @@ void	pipex(t_info info, char **argv)
 	// exit (status);
 	// errno = max_status;
 	// free_fds(info.fds, info.cmd_cnt - 1);
-	// return (max_status);
+	return (max_status);
 }

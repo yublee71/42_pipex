@@ -6,11 +6,12 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 15:24:09 by yublee            #+#    #+#             */
-/*   Updated: 2024/04/23 15:28:59 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/05 00:21:21 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 char	*ft_store_until_newline(char *stored)
 {
@@ -19,7 +20,8 @@ char	*ft_store_until_newline(char *stored)
 
 	i = ft_charcheck(stored, '\n');
 	temp = stored;
-	stored = ft_gnl_substr(stored, i, ft_strlen(stored));
+	if (stored)
+		stored = ft_gnl_substr(stored, i, ft_strlen(stored));
 	free(temp);
 	return (stored);
 }
@@ -69,9 +71,16 @@ char	*get_next_line(int fd)
 	ssize_t		rd_size;
 
 	if (fd < 0)
+	{
+		free(stored[0]);
 		return (NULL);
+	}
 	stored[fd] = ft_initialize(stored[fd], fd);
+	printf("stored: %send\n", stored[0]);
+	// printf("char: %ld", ft_charcheck(stored[fd], '\n'));
 	line = ft_gnl_substr(stored[fd], 0, ft_charcheck(stored[fd], '\n'));
+	// printf("how many\n");
+	// if (ft_str(line))
 	if (ft_charcheck(stored[fd], '\n'))
 		stored[fd] = ft_store_until_newline(stored[fd]);
 	else if (stored[fd])
@@ -87,5 +96,6 @@ char	*get_next_line(int fd)
 			line = ft_strdup(stored[fd]);
 		stored[fd] = ft_free(&stored[fd], buffer);
 	}
+	// free(stored[fd]);
 	return (line);
 }

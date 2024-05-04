@@ -6,7 +6,7 @@
 #    By: yublee <yublee@student.42london.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/19 14:55:22 by yublee            #+#    #+#              #
-#    Updated: 2024/05/03 15:34:27 by yublee           ###   ########.fr        #
+#    Updated: 2024/05/04 23:53:18 by yublee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ DIRS = src gnl
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 RM = rm
 
@@ -29,11 +29,12 @@ INCLUDE = -I include/
 NAME = pipex
 
 SRC = src/main.c \
-	src/pipex.c \
-	src/utils.c \
 	gnl/get_next_line.c \
 	gnl/get_next_line_utils.c \
+	src/pipex.c \
+	src/utils.c \
 
+	
 BONUS_SRC = src/main_bonus.c \
 	src/pipex_bonus.c \
 	src/utils_bonus.c \
