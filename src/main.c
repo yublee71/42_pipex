@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/04 20:43:47 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/04 21:31:39 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ static int	**create_pipeline(int cnt)
 	int	i;
 
 	fds = (int **)malloc(cnt * sizeof(int *));
-	if (!fds)
-		exit_with_error("malloc", EXIT_FAILURE);
+	// if (!fds)
+	// 	exit_with_error("malloc", EXIT_FAILURE);
 	i = 0;
 	while (i < cnt)
 	{
@@ -53,12 +53,12 @@ static int	**create_pipeline(int cnt)
 		if (!fds[i])
 		{
 			free_fds(fds, i);
-			exit_with_error("malloc", EXIT_FAILURE);
+			// exit_with_error("malloc", EXIT_FAILURE);
 		}
 		if (pipe(fds[i]) < 0)
 		{
 			free_fds(fds, i + 1);
-			exit_with_error("pipe", EXIT_FAILURE);
+			// exit_with_error("pipe", EXIT_FAILURE);
 		}
 		i++;
 	}
@@ -82,11 +82,12 @@ int	main(int argc, char *argv[], char **env)
 	// pid_t	pid;
 
 	if (argc < 5)
-		exit_with_error("bad arguments", EXIT_FAILURE);
+		exit(EXIT_FAILURE);
+		// exit_with_error("bad arguments", EXIT_FAILURE);
 	info = get_info(argc, argv, env);
 	info.fds = create_pipeline(info.cmd_cnt - 1);
 	pipex(info, argv);
 	// waitpid(pid, &status, 0);
 	// exit_status(info);
-	// exit(WEXITSTATUS(status));
+	// return (status);
 }

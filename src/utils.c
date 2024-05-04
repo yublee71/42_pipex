@@ -6,14 +6,15 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:34:13 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/03 15:47:36 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/04 21:36:38 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	exit_with_error(char *str, int exit_no)
+void	exit_with_error(char *str, int exit_no, t_info info)
 {
+	free_fds(info.fds, info.cmd_cnt - 1);
 	if (exit_no == 127)
 	{
 		write(2, str, ft_strlen(str));
@@ -72,7 +73,7 @@ static void	check_path(char **paths, char **args)
 	}
 }
 
-char	**get_args(char *argv, char **env)
+char	**get_args(char *argv, char **env, t_info info)
 {
 	char	**args;
 	int		i;
@@ -95,7 +96,7 @@ char	**get_args(char *argv, char **env)
 		tmp = ft_strdup(args[0]);
 		free_str_array(args);
 		free_str_array(paths);
-		exit_with_error(tmp, 127);
+		exit_with_error(tmp, 127, info);
 	}
 	free_str_array(paths);
 	return (args);
