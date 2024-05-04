@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:55:33 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/03 15:09:42 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/04 18:54:42 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,10 @@ typedef struct s_info
 	int		cmd_cnt;
 	char	**env;
 	int		here_doc;
+	int		**fds;
 }	t_info;
 
-pid_t	pipex(t_info info, int fds[2][2], char **argv);
+pid_t	pipex(t_info info, char **argv);
 char	**get_args(char *argv, char **env);
 void	exit_with_error(char *str, int exit_no);
 void	free_str_array(char **array);
