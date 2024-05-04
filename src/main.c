@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/04 19:16:32 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/04 20:43:47 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static t_info	get_info(int argc, char **argv, char **env)
 	return (info);
 }
 
-static void	free_fds(int **fds, int i)
+void	free_fds(int **fds, int i)
 {
 	int	j;
 
@@ -65,31 +65,28 @@ static int	**create_pipeline(int cnt)
 	return (fds);
 }
 
-static void	exit_status(t_info info)
-{
-	int	tmp;
+// static void	exit_status(t_info info)
+// {
+// 	int	tmp;
 
-	tmp = errno;
-	free_fds(info.fds, info.cmd_cnt - 1);
-	while (wait(NULL) != -1)
-		;
-	errno = tmp;
-	return ;
-}
+// 	tmp = errno;
+// 	errno = tmp;
+// 	(void)info;
+// 	return ;
+// }
 
 int	main(int argc, char *argv[], char **env)
 {
-	int		status;
+	// int		status;
 	t_info	info;
-	pid_t	pid;
+	// pid_t	pid;
 
 	if (argc < 5)
 		exit_with_error("bad arguments", EXIT_FAILURE);
 	info = get_info(argc, argv, env);
 	info.fds = create_pipeline(info.cmd_cnt - 1);
-	pid = pipex(info, argv);
-	
-	waitpid(pid, &status, 0);
-	exit_status(info);
-	exit(WEXITSTATUS(status));
+	pipex(info, argv);
+	// waitpid(pid, &status, 0);
+	// exit_status(info);
+	// exit(WEXITSTATUS(status));
 }

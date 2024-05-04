@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/04 18:55:14 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/04 20:41:53 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,5 +109,8 @@ pid_t	pipex(t_info info, char **argv)
 		if (i != info.cmd_cnt - 1)
 			close(info.fds[i][WRITE_END]);
 	}
+	free_fds(info.fds, info.cmd_cnt - 1);
+	while (wait(NULL) != -1)
+		;
 	return (pid);
 }
