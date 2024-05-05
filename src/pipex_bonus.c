@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/05 02:55:40 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/05 02:58:02 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ static void	get_input(t_info info)
 		free(buf);
 		buf = get_next_line(-1);
 		close(info.fds[0][WRITE_END]);
-		exit_with_error(NULL, 0, info);
+		free_fds(info.fds, info.cmd_cnt - 1);
+		exit(EXIT_SUCCESS);
 	}
 	fd_input = open(info.input, O_RDONLY);
 	if (fd_input < 0 || dup2(fd_input, STDIN_FILENO) < 0)
