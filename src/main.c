@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/05 00:03:32 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/05 01:04:49 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,18 @@ static t_info	get_info(int argc, char **argv, char **env)
 
 	info.output = argv[argc - 1];
 	info.env = env;
-	info.cmd_cnt = argc - 3;
 	info.here_doc = !ft_strncmp(argv[1], "here_doc", 8);
+	info.cmd_cnt = argc - 3;
 	if (info.here_doc == 0)
+	{
 		info.input = argv[1];
+		info.here_doc_end = NULL;
+	}
 	else
+	{
 		info.input = NULL;
+		info.here_doc_end = argv[2];
+	}
 	return (info);
 }
 

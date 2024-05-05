@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:55:33 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/05 00:03:01 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/05 00:43:07 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_info
 	int		cmd_cnt;
 	char	**env;
 	int		here_doc;
+	char	*here_doc_end;
 	int		**fds;
 }	t_info;
 

@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 15:24:09 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/05 00:21:21 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/05 00:30:36 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	stored[fd] = ft_initialize(stored[fd], fd);
-	printf("stored: %send\n", stored[0]);
+	// printf("stored: %send\n", stored[0]);
 	// printf("char: %ld", ft_charcheck(stored[fd], '\n'));
 	line = ft_gnl_substr(stored[fd], 0, ft_charcheck(stored[fd], '\n'));
 	// printf("how many\n");
