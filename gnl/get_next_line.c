@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 15:24:09 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/05 00:30:36 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/05 11:52:43 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,24 +70,15 @@ char	*get_next_line(int fd)
 	char		*buffer;
 	ssize_t		rd_size;
 
-	if (fd < 0)
-	{
-		free(stored[0]);
-		return (NULL);
-	}
 	stored[fd] = ft_initialize(stored[fd], fd);
-	// printf("stored: %send\n", stored[0]);
-	// printf("char: %ld", ft_charcheck(stored[fd], '\n'));
 	line = ft_gnl_substr(stored[fd], 0, ft_charcheck(stored[fd], '\n'));
-	// printf("how many\n");
-	// if (ft_str(line))
 	if (ft_charcheck(stored[fd], '\n'))
 		stored[fd] = ft_store_until_newline(stored[fd]);
 	else if (stored[fd])
 	{
 		buffer = ft_malloc(BUFFER_SIZE + 1);
 		rd_size = read(fd, buffer, BUFFER_SIZE);
-		if (rd_size < 0)
+		if (rd_size <= 0)
 			return (ft_free(&stored[fd], buffer));
 		stored[fd] = ft_f_strjoin(stored[fd], buffer);
 		if (rd_size > 0)
@@ -96,6 +87,5 @@ char	*get_next_line(int fd)
 			line = ft_strdup(stored[fd]);
 		stored[fd] = ft_free(&stored[fd], buffer);
 	}
-	// free(stored[fd]);
 	return (line);
 }

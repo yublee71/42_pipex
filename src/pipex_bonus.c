@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/05 02:58:02 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/05 11:49:49 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,9 @@ static void	get_input(t_info info)
 			free(buf);
 		}
 		free(buf);
-		buf = get_next_line(-1);
 		close(info.fds[0][WRITE_END]);
+		close(0);
+		buf = get_next_line(0);
 		free_fds(info.fds, info.cmd_cnt - 1);
 		exit(EXIT_SUCCESS);
 	}

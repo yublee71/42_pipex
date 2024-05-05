@@ -6,7 +6,7 @@
 #    By: yublee <yublee@student.42london.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/19 14:55:22 by yublee            #+#    #+#              #
-#    Updated: 2024/05/04 23:53:18 by yublee           ###   ########.fr        #
+#    Updated: 2024/05/05 12:00:24 by yublee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,10 +29,10 @@ INCLUDE = -I include/
 NAME = pipex
 
 SRC = src/main.c \
-	gnl/get_next_line.c \
-	gnl/get_next_line_utils.c \
 	src/pipex.c \
 	src/utils.c \
+	gnl/get_next_line.c \
+	gnl/get_next_line_utils.c \
 
 	
 BONUS_SRC = src/main_bonus.c \

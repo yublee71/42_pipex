@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 15:25:07 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/04 23:52:13 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/05 11:54:12 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,6 @@ char	*ft_gnl_substr(char *s, size_t start, size_t len)
 	i = start;
 	j = 0;
 	strlen = ft_strlen(s);
-	// printf("strlen: %ld\n", strlen);
-	// printf("start: %ld\n", start);
-	// printf("len: %ld\n", len);
 	if (!strlen || start > strlen)
 	{
 		substring = ft_strdup("");
@@ -37,19 +34,11 @@ char	*ft_gnl_substr(char *s, size_t start, size_t len)
 		substring = (char *)malloc(len + 1);
 	else
 		substring = (char *)malloc(strlen - start + 1);
-	// printf("now?\n");
 	if (!substring)
 		return (NULL);
-	// printf("s: %send\n", s);
 	while (s[i] && j < len)
-	{
-		substring[j] = s[i];
-		j++;
-		i++;
-	}
-	// printf("substring: %send\n", substring);
+		substring[j++] = s[i++];
 	substring[j] = '\0';
-	// printf("substring: %send\n", substring);
 	return (substring);
 }
 

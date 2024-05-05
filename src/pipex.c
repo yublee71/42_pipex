@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/05 01:58:27 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/05 12:02:38 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,16 +56,16 @@ static void	get_input(t_info info)
 			free(buf);
 		}
 		free(buf);
-		buf = get_next_line(-1);
 		close(info.fds[0][WRITE_END]);
+		close(0);
+		buf = get_next_line(0);
+		free_fds(info.fds, info.cmd_cnt - 1);
+		exit(EXIT_SUCCESS);
 	}
-	else
-	{
-		fd_input = open(info.input, O_RDONLY);
-		if (fd_input < 0 || dup2(fd_input, STDIN_FILENO) < 0)
-			exit_with_error("input", EXIT_FAILURE, info);
-		close(fd_input);
-	}
+	fd_input = open(info.input, O_RDONLY);
+	if (fd_input < 0 || dup2(fd_input, STDIN_FILENO) < 0)
+		exit_with_error("input", EXIT_FAILURE, info);
+	close(fd_input);
 }
 
 static void	child_process(int i, char *cmd, t_info info)
@@ -88,11 +88,6 @@ static void	child_process(int i, char *cmd, t_info info)
 	}
 	else
 		get_output(info);
-	if (info.here_doc && i == 0)
-	{
-		free_fds(info.fds, info.cmd_cnt - 1);
-		exit(EXIT_SUCCESS);
-	}
 	execute_cmd(cmd, info);
 }
 
@@ -111,6 +106,8 @@ int	pipex(t_info info, char **argv)
 			exit_with_error("fork", EXIT_FAILURE, info);
 		if (pid == 0)
 			child_process(i, argv[i + 2], info);
+		if (i == 0 && info.here_doc)
+			wait(NULL);
 		if (i != 0)
 			close(info.fds[i - 1][READ_END]);
 		if (i != info.cmd_cnt - 1)
