@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/05 01:21:58 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/05 01:58:27 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,24 +50,20 @@ static void	get_input(t_info info)
 		while (1)
 		{
 			buf = get_next_line(0);
-			if (!ft_strncmp(buf, info.here_doc_end, ft_strlen(info.here_doc_end) - 1))
+			if (!ft_strncmp(buf, info.h_end, ft_strlen(info.h_end) - 1))
 				break ;
 			write(info.fds[0][WRITE_END], buf, ft_strlen(buf));
 			free(buf);
 		}
 		free(buf);
 		buf = get_next_line(-1);
-		// if (dup2(info.fds[0][WRITE_END], STDIN_FILENO) < 0)
-		// 	exit_with_error("dup2", EXIT_FAILURE, info);
 		close(info.fds[0][WRITE_END]);
 	}
 	else
 	{
 		fd_input = open(info.input, O_RDONLY);
-		if (fd_input < 0)
+		if (fd_input < 0 || dup2(fd_input, STDIN_FILENO) < 0)
 			exit_with_error("input", EXIT_FAILURE, info);
-		if (dup2(fd_input, STDIN_FILENO) < 0)
-			exit_with_error("dup2", EXIT_FAILURE, info);
 		close(fd_input);
 	}
 }
@@ -105,11 +101,9 @@ int	pipex(t_info info, char **argv)
 	int		i;
 	pid_t	pid;
 	int		status;
-	int		max_status;
 
 	i = -1;
 	status = 0;
-	max_status = 0;
 	while (info.cmd_cnt && ++i < info.cmd_cnt)
 	{
 		pid = fork();
@@ -122,19 +116,9 @@ int	pipex(t_info info, char **argv)
 		if (i != info.cmd_cnt - 1)
 			close(info.fds[i][WRITE_END]);
 	}
-	// printf("pid: %d", getpid());
-	// free_fds(info.fds, info.cmd_cnt - 1);
-	while (wait(&status) != -1)
-	{
-		// printf("what : %d\n", WEXITSTATUS(status));
-		// if (max_status < WEXITSTATUS(status))
-		// 	max_status = WEXITSTATUS(status);
-		;
-	}
-	// printf("max : %d\n", max_status);
 	free_fds(info.fds, info.cmd_cnt - 1);
-	// exit (status);
-	// errno = max_status;
-	// free_fds(info.fds, info.cmd_cnt - 1);
-	return (max_status);
+	waitpid(pid, &status, 0);
+	while (wait(NULL) != -1)
+		;
+	exit(WEXITSTATUS(status));
 }

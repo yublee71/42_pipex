@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:34:13 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/05 00:06:05 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/05 01:50:55 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 void	exit_with_error(char *str, int exit_no, t_info info)
 {
-	// free_fds(info.fds, info.cmd_cnt - 1);
-	if (free_fds(info.fds, info.cmd_cnt -1) && exit_no == 127)
+	if (info.fds)
+		free_fds(info.fds, info.cmd_cnt -1);
+	if (exit_no == 127)
 	{
 		write(2, str, ft_strlen(str));
 		write(2, ": command not found\n", 20);
