@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/05 12:02:38 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/10 12:27:53 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	get_input(t_info info)
 		while (1)
 		{
 			buf = get_next_line(0);
-			if (!ft_strncmp(buf, info.h_end, ft_strlen(info.h_end) - 1))
+			if (!ft_strncmp(buf, info.h_end, ft_strlen(info.h_end)))
 				break ;
 			write(info.fds[0][WRITE_END], buf, ft_strlen(buf));
 			free(buf);

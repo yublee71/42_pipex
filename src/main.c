@@ -6,7 +6,7 @@
 /*   By: yublee <yublee@student.42london.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:37:53 by yublee            #+#    #+#             */
-/*   Updated: 2024/05/05 01:57:48 by yublee           ###   ########.fr       */
+/*   Updated: 2024/05/10 12:27:29 by yublee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,10 @@ int	main(int argc, char *argv[], char **env)
 	t_info	info;
 
 	if (argc < 5)
+	{
+		write(2, "error: need more arguements\n", 28);
 		exit(EXIT_FAILURE);
+	}
 	info = get_info(argc, argv, env);
 	info.fds = create_pipeline(info.cmd_cnt - 1);
 	pipex(info, argv);
